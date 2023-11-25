@@ -1,31 +1,67 @@
-class players:
-    def __init__(self, age, height, weight, speed):
-        self.age = age
-        self.height = height
-        self.weight = weight
-        self.speed = speed
-
-    def setings(self):
-        print(
-            f'його вік {self.age} років, його ріст {self.height} см, його вага {self.weight} кг, його швидкість {self.speed} км/год')
+from tkinter import *
 
 
-class players_1(players):
-    def __init__(self, age, height, weight, speed, defence):
-        super().__init__(age, height, weight, speed)
-        self.defence = defence
+class Main(Frame):
+    def __init__(self, root):
+        super(Main, self).__init__(root)
+        self.build()
 
-    def setings(self):
-        print(
-            f'його вік {self.age} років, його ріст {self.height} см, його вага {self.weight} кг, його швидкість {self.speed} км/год, його захист {self.defence} гравців')
+    def build(self):
+        self.formula = "0"
+        self.lbl = Label(text=self.formula, font=("Times, serif", 58, "bold"), bg="#098", foreground="#FCF")
+
+        self.lbl.place(x=20, y=50)
+
+        btns = [
+            "C", "DEL", "*", "=",
+            "1", "2", "3", "/",
+            "4", "5", "6", "+",
+            "7", "8", "9", "-",
+            "(", "0", ")", "X^2"
+        ]
+
+        x = 10
+        y = 140
+
+        for bt in btns:
+            com = lambda x=bt: self.logicalc(x)
+            Button(text=bt, bg="#FCC",
+                   font=("SketchItalic", 30),
+                   command=com).place(x=x, y=y,
+                                      width=116,
+                                      height=90)
+            x += 117
+            if x > 400:
+                x = 10
+                y += 81
+
+    def logicalc(self, operation):
+        if operation == "C":
+            self.formula = ""
+        elif operation == "DEL":
+            self.formula = self.formula[0:-1]
+        elif operation == "X^2":
+            self.formula = str((eval(self.formula))**2)
+        elif operation == "=":
+            self.formula = str(eval(self.formula))
+        else:
+            if self.formula == "0":
+                self.formula = ""
+            self.formula += operation
+        self.update()
+
+    def update(self):
+        if self.formula == "":
+            self.formula = "0"
+        self.lbl.configure(text=self.formula)
 
 
-class players_2(players):
-    pass
-
-
-p1 = players_1('22', '185', '80', '35', '8/10')
-p1.setings()
-p2 = players_2('21', '179', '59', '34', )
-p2.setings()
-
+if __name__ == '__main__':
+    root = Tk()
+    root["bg"] = "#098"
+    root.geometry("485x560+250+250")
+    root.title("Калькулятор")
+    root.resizable(False, False)
+    app = Main(root)
+    app.pack()
+    root.mainloop()
